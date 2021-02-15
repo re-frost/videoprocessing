@@ -2,6 +2,9 @@
 #include <iostream>
 #include <opencv4/opencv2/core/core.hpp>
 #include <opencv4/opencv2/imgproc/imgproc.hpp>
+#include <opencv4/opencv2/videoio.hpp>
+#include <opencv4/opencv2/video/background_segm.hpp>
+
 
 #include "staticUtils.h"
 
@@ -9,7 +12,25 @@ using namespace cv;
 
 FrameProcessing::FrameProcessing() {}
 
-Mat FrameProcessing::FindContoursBasic(Mat img, int area)
+Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) {
+
+    Mat output, fgMask, gaussBlure, grayscale;
+    cv::cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
+
+    GaussianBlur(grayscale, gaussBlure, Size(5, 5), BORDER_CONSTANT);
+    pBackSub->apply(gaussBlure, fgMask);
+
+    //get the frame number and write it on the current frame
+    rectangle(fgMask, cv::Point(10, 2), cv::Point(100,20),
+              cv::Scalar(255,255,255), -1);
+
+    putText(fgMask, frameNumberString.c_str(), cv::Point(15, 15),
+            FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
+
+    return fgMask;
+}
+
+Mat FrameProcessing::findContoursBasic(Mat img, int area)
 {
     vector<vector<Point> > contours;
     findContours(img, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -21,9 +42,9 @@ Mat FrameProcessing::FindContoursBasic(Mat img, int area)
         if (Area < area) {
             continue;
         }
-//                cv::Rect bb = cv::boundingRect(contours[i]);
-//                cv::rectangle(output, bb, randomColor(rng));
-        //    std::cout << bb.x << " " << bb.y << " " << bb.height << " "<< bb.width << std::endl;
+//        cv::Rect bb = cv::boundingRect(contours[i]);
+//        cv::rectangle(output, bb, randomColor(rng));
+//        std::cout << bb.x << " " << bb.y << " " << bb.height << " "<< bb.width << std::endl;
         cv::drawContours(output, contours, i, randomColor(rng));
 
     }
@@ -49,15 +70,15 @@ Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
     return aux;
 }
 
-Mat FrameProcessing::removeBackground(Mat frame) {
+Mat FrameProcessing::removeBackground(Mat input, int lower, int upper) {
         Mat gaussBlure, grayscale;
-        cvtColor(frame, grayscale, cv::COLOR_RGB2GRAY);
-        GaussianBlur(grayscale, gaussBlure, cv::Size(31, 31), cv::BORDER_CONSTANT);
+        cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
+        GaussianBlur(grayscale, gaussBlure, cv::Size(21, 21), cv::BORDER_CONSTANT);
         Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 1);
 
         // Binarize image for segment
         Mat img_thr;
-        cv::threshold(noLight, img_thr, 40, 150, cv::THRESH_BINARY);
+        cv::threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
         return img_thr;
 }
 

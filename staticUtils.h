@@ -24,6 +24,10 @@ const int upper_threshold = 100;
 static int lower = 0;
 static int upper = upper_threshold;
 
+const String BACKGROUNDREMOVE_SLIDER = "Remve Background";
+const int max_value_BR = 255;
+static int low_br = 0;
+static int high_br = 255;
 
 static void on_low_H_thresh_trackbar(int, void *)
 {
@@ -61,7 +65,7 @@ static void on_high_V_thresh_trackbar(int, void *)
     setTrackbarPos("High V", HSV_SLIDER, high_V);
 }
 
-
+// Threshold Auto Canny
 static void on_low_edge_thresh_trackbar(int, void *)
 {
     lower = min(upper-1, lower);
@@ -72,6 +76,19 @@ static void on_heigh_edge_thresh_trackbar(int, void *)
 {
     upper = max(upper, lower+1);;
     setTrackbarPos("upper threshold", EDGE_SLIDER, upper);
+}
+
+// Threshold Background REMOVE
+static void on_low_backgroundRemove_thresh_trackbar(int, void *)
+{
+    lower = min(high_br - 1, low_br);
+    setTrackbarPos("Low threshold", BACKGROUNDREMOVE_SLIDER, low_br);
+}
+
+static void on_heigh_backgroundRemove_thresh_trackbar(int, void *)
+{
+    upper = max(high_br, low_br+1);;
+    setTrackbarPos("upper threshold", BACKGROUNDREMOVE_SLIDER, high_br);
 }
 
 static void mouseCallBack(int event, int x, int y, int flags, void*){

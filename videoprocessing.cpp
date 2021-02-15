@@ -13,8 +13,11 @@ VideoProcessing::VideoProcessing(std::string videofile)
     // Capture contains viodeostream
     capture = openCapture(videofile);
 
+    // HSV with slider: HSV_SLIDER
+    // Canny with slider: EDGE_SLIDER
+    // Remove Background: BACKGROUNDREMOVE_SLIDER
     Show show;
-    show.basicStream(capture, "Remove Light", 'B');
+    show.basicStream(capture, BACKGROUNDREMOVE_SLIDER, "Remove Background");
 
 
 }

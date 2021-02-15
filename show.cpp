@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include <opencv4/opencv2/highgui/highgui.hpp>
 #include <opencv4/opencv2/core/core.hpp>
@@ -17,41 +18,44 @@ Show::Show(){}
 
 Show::~Show(){}
 
-void Show::basicStream(VideoCapture &capture, String winName, char modus) {
+void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     Mat frame, result, hsv, edges;
 
     namedWindow(winName, WINDOW_AUTOSIZE);
-    resizeWindow(winName, 800, 800);
 
     FrameProcessing modframe;
     while(true) {
-        int wk = cv::waitKey(100);
+        int wk = cv::waitKey(250);
         capture >> frame;
 
         if (!frame.empty()) {
 
-            if (modus == 'U'){
+            if (modus == "unchangned"){
 
                 result = frame;
-            }else if (modus == 'H'){
+            }else if (modus == "HSV"){
 
                 hsv = modframe.toHSV(frame);
                 result = Show::hsvSlider(hsv);
-            }else if (modus == 'E'){
+            }else if (modus == "edge"){
 
                 edges = modframe.autoCanny(frame, lower, upper);
                 Show::edgeSlider(edges);
                 result = edges;
-            }else if (modus == 'R'){
+            }else if (modus == "Background Subtraction"){
 
-                // Contour
-                hsv = modframe.toHSV(frame);
+                stringstream ss;
+                ss << capture.get(CAP_PROP_POS_FRAMES);
+                string frameNumberString = ss.str();
 
-                result = Show::hsvSlider(hsv);
-            }else if (modus == 'B'){
-                result = modframe.removeBackground(frame);
+                result = modframe.backgroundSubtraction(frame, frameNumberString);
+            }else if (modus == "Remove Background"){
+
+                Show::backgroundRemoveSlider(frame);
+                result = modframe.removeBackground(frame, low_br, high_br);
             }
+
 
             imshow(winName, result);
 
@@ -64,6 +68,13 @@ void Show::basicStream(VideoCapture &capture, String winName, char modus) {
     }
     cv::destroyAllWindows();
     capture.release();
+}
+
+void Show::backgroundRemoveSlider(Mat frame){
+    Mat frame_threshold;
+    createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
+    createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
+    cv::inRange(frame, Scalar(lower), Scalar(upper), frame_threshold);
 }
 
 void Show::edgeSlider(Mat frame) {

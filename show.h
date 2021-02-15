@@ -8,16 +8,18 @@
 #include "videoprocessing.h"
 
 using namespace cv;
+using namespace std;
+
 class Show
 {
 public:
     Show();
 
     void showHSV();
-    void basicStream(VideoCapture&, String, char);
+    void basicStream(VideoCapture&, String, string);
     Mat hsvSlider(Mat);
     void edgeSlider(Mat);
-
+    void backgroundRemoveSlider(Mat);
     ~Show();
 
 private:
