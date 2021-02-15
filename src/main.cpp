@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     else
         filepath = "";
     VideoProcessing Workshop(filepath);
-    Workshop.showBasicStream("hsv", 'H');
+    Workshop.showBasicStream("hsv", 'B');
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }

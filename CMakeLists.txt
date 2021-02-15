@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.5)
 
 project(PlanBeamer LANGUAGES CXX)
 find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
+include_directories( ${OpenCV_INCLUDE_DIRS} include/)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-add_executable(PlanBeamer main.cpp videoprocessing.cpp show.cpp frameprocessing.cpp staticUtils.h)
+add_executable(PlanBeamer src/main.cpp src/videoprocessing.cpp src/show.cpp src/frameprocessing.cpp include/staticUtils.h)
 target_link_libraries( PlanBeamer ${OpenCV_LIBS} )
