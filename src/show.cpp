@@ -1,18 +1,5 @@
 #include "show.h"
 
-#include <string>
-#include <iostream>
-#include <sstream>
-
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/core/core.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/core/utility.hpp>
-
-#include "frameprocessing.h"
-#include "staticUtils.h"
-
 using namespace cv;
 Show::Show(){}
 

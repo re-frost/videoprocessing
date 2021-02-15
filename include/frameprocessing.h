@@ -4,8 +4,12 @@
 #include <string>
 #include <opencv4/opencv2/core/core.hpp>
 #include <opencv4/opencv2/video/background_segm.hpp>
+#include <opencv4/opencv2/imgproc/imgproc.hpp>
+#include <opencv4/opencv2/videoio.hpp>
+
 using namespace cv;
 using namespace std;
+
 class FrameProcessing{
 public:
     FrameProcessing();

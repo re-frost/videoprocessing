@@ -1,8 +1,6 @@
 #include "videoprocessing.h"
-#include "show.h"
-#include <string>
 #include "staticUtils.h"
-#include <opencv4/opencv2/videoio.hpp>
+
 
 using namespace cv;
 
@@ -17,8 +15,9 @@ VideoProcessing::VideoProcessing(std::string videofile)
     // Canny with slider: EDGE_SLIDER
     // Remove Background: BACKGROUNDREMOVE_SLIDER
     Show show;
+//    show.basicStream(capture, HSV_SLIDER, "HSV");
+//    show.basicStream(capture, EDGE_SLIDER, "edge");
     show.basicStream(capture, BACKGROUNDREMOVE_SLIDER, "Remove Background");
-
 
 }
 
