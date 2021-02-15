@@ -9,7 +9,6 @@ VideoProcessing::VideoProcessing(std::string videofile)
 
     // Capture contains viodeostream
     capture = openCapture(videofile);
-   
 }
 
 VideoCapture VideoProcessing::openCapture(std::string videofile) {
