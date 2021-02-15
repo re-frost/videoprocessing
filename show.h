@@ -1,11 +1,14 @@
 ﻿#ifndef SHOW_H
 #define SHOW_H
-#include <string>
 
-#include <opencv4/opencv2/core/core.hpp>
+#include <string>
+#include <iostream>
+
 #include <opencv4/opencv2/videoio.hpp>
 
 #include "videoprocessing.h"
+#include "frameprocessing.h"
+#include "staticUtils.h"
 
 using namespace cv;
 class Show

@@ -1,8 +1,5 @@
 #include "videoprocessing.h"
-#include "show.h"
-#include <string>
 #include "staticUtils.h"
-#include <opencv4/opencv2/videoio.hpp>
 
 using namespace cv;
 
@@ -12,11 +9,7 @@ VideoProcessing::VideoProcessing(std::string videofile)
 
     // Capture contains viodeostream
     capture = openCapture(videofile);
-
-    Show show;
-    show.basicStream(capture, "Remove Light", 'B');
-
-
+   
 }
 
 VideoCapture VideoProcessing::openCapture(std::string videofile) {
@@ -33,3 +26,8 @@ VideoCapture VideoProcessing::openCapture(std::string videofile) {
 
 
 VideoProcessing::~VideoProcessing(){}
+
+void VideoProcessing::showBasicStream(std::string windowName, char modus){
+    Show show;
+    show.basicStream(capture, (String)windowName, modus);
+}

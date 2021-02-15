@@ -1,8 +1,6 @@
-#include "frameprocessing.h"
 #include <iostream>
-#include <opencv4/opencv2/core/core.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
 
+#include "frameprocessing.h"
 #include "staticUtils.h"
 
 using namespace cv;

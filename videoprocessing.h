@@ -9,10 +9,11 @@ using namespace cv;
 class VideoProcessing {
 
 public:
-    VideoProcessing(std::string);
+    VideoProcessing(std::string = "");
 
-    VideoCapture openCapture(std::string);
+    VideoCapture openCapture(std::string = "");
     ~VideoProcessing();
+    void showBasicStream(std::string, char = 'U');
 
 private:
     std::string filepath;

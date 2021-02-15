@@ -3,18 +3,18 @@
 
 #include "videoprocessing.h"
 
-
 int main(int argc, char *argv[])
 {
-
-    std::string filepath = argv[1];
-
+    std::string filepath;
+    if (argc > 2)
+        filepath = argv[1];
+    else
+        filepath = "";
     VideoProcessing Workshop(filepath);
-
+    Workshop.showBasicStream("hsv", 'H');
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }
-
 
 
 /*

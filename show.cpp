@@ -1,17 +1,5 @@
 #include "show.h"
 
-#include <string>
-#include <iostream>
-
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/core/core.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/core/utility.hpp>
-
-#include "frameprocessing.h"
-#include "staticUtils.h"
-
 using namespace cv;
 Show::Show(){}
 
@@ -22,7 +10,7 @@ void Show::basicStream(VideoCapture &capture, String winName, char modus) {
     Mat frame, result, hsv, edges;
 
     namedWindow(winName, WINDOW_AUTOSIZE);
-    resizeWindow(winName, 800, 800);
+    // resizeWindow(winName, 800, 800);
 
     FrameProcessing modframe;
     while(true) {

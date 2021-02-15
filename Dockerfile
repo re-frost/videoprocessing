@@ -81,7 +81,7 @@ RUN cd ~/opencv_build/opencv && \
     -D BUILD_SHARED_LIBS=ON .. \
 #    -D WITH_CUDNN=ON \
 #    -D BUILD_opencv_cudacodec=OFF \
-    && make  -j16 \
+    && make  -j6 \
     && make install
 
 RUN /bin/bash -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf' && ldconfig
