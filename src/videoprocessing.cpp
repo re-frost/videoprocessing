@@ -35,3 +35,8 @@ VideoCapture VideoProcessing::openCapture(std::string videofile) {
 
 
 VideoProcessing::~VideoProcessing(){}
+
+// void VideoProcessing::showBasicStream(std::string windowName, std::string modus){
+//     Show show;
+//     show.basicStream(capture, (String)windowName, modus);
+// }

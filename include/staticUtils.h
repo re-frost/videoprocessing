@@ -24,7 +24,7 @@ const int upper_threshold = 100;
 static int lower = 0;
 static int upper = upper_threshold;
 
-const String BACKGROUNDREMOVE_SLIDER = "Remve Background";
+const String BACKGROUNDREMOVE_SLIDER = "Remove Background";
 const int max_value_BR = 255;
 static int low_br = 0;
 static int high_br = 255;
