@@ -81,13 +81,13 @@ static void on_heigh_edge_thresh_trackbar(int, void *)
 // Threshold Background REMOVE
 static void on_low_backgroundRemove_thresh_trackbar(int, void *)
 {
-    lower = min(high_br - 1, low_br);
+    low_br = min(high_br - 1, low_br);
     setTrackbarPos("Low threshold", BACKGROUNDREMOVE_SLIDER, low_br);
 }
 
 static void on_heigh_backgroundRemove_thresh_trackbar(int, void *)
 {
-    upper = max(high_br, low_br+1);;
+    high_br = max(high_br, low_br+1);;
     setTrackbarPos("upper threshold", BACKGROUNDREMOVE_SLIDER, high_br);
 }
 

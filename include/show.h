@@ -23,10 +23,10 @@ public:
     Show();
 
     void showHSV();
-    void basicStream(VideoCapture&, String, string);
+    void basicStream(VideoCapture&, String, std::string);
     Mat hsvSlider(Mat);
     void edgeSlider(Mat);
-    void backgroundRemoveSlider(Mat);
+    void backgroundRemoveSlider();
     ~Show();
 
 private:
