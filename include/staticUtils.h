@@ -20,14 +20,22 @@ static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
 const String EDGE_SLIDER = "Edge Slide";
 const int upper_threshold = 100;
-
 static int lower = 0;
 static int upper = upper_threshold;
 
 const String BACKGROUNDREMOVE_SLIDER = "Remove Background";
 const int max_value_BR = 255;
+const int max_blure = 51;
+const int max_kernel_size = 21;
+
 static int low_br = 0;
 static int high_br = 255;
+
+static int low_blure = 1;
+static int high_blure = max_blure;
+
+static int min_kernel = 0;
+static int kernel_size = max_kernel_size;
 
 static void on_low_H_thresh_trackbar(int, void *)
 {
@@ -87,10 +95,30 @@ static void on_low_backgroundRemove_thresh_trackbar(int, void *)
 
 static void on_heigh_backgroundRemove_thresh_trackbar(int, void *)
 {
+<<<<<<< HEAD
     high_br = max(high_br, low_br+1);;
+=======
+    high_br = max(high_br, low_br+1);
+>>>>>>> 225e92ee81cb1fc91d618da8cfa0547dab2b0872
     setTrackbarPos("upper threshold", BACKGROUNDREMOVE_SLIDER, high_br);
 }
 
+static void backgroundRemove_blure_thresh_trackbar(int, void *)
+{
+    low_blure = min(max_blure, low_blure);
+    if ((low_blure % 2 ==0) && (low_blure < max_blure)) {
+        low_blure++;
+    }
+    setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, low_blure);
+}
+
+static void backgroundRemove_kernel_size_trackbar(int, void *)
+{
+    kernel_size = min(kernel_size, max_kernel_size);
+    setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, kernel_size);
+}
+
+//
 static void mouseCallBack(int event, int x, int y, int flags, void*){
 
 //    if (event == cv::EVENT_LBUTTONDOWN) {

@@ -19,13 +19,14 @@ public:
     Mat backgroundSubtraction(Mat, string);
 
 
-
-    Mat removeBackground(Mat, int, int);
+    Mat dilatation(Mat, int, int);
+    Mat removeBackground(Mat, int, int, int, int);
     Mat removeLight(Mat, Mat, int);
     ~FrameProcessing();
 
 private:
     Ptr<BackgroundSubtractor> pBackSub = createBackgroundSubtractorMOG2(5000, 20, false);
+    MorphShapes dilation_type;
 };
 
 #endif // FRAMEPROCESSING_H
