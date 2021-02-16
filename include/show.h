@@ -23,13 +23,9 @@ public:
     Show();
 
     void showHSV();
-    void basicStream(VideoCapture&, String, std::string);
+    void basicStream(VideoCapture&, String, string);
     Mat hsvSlider(Mat);
-<<<<<<< HEAD
-    void edgeSlider(Mat);
-=======
     void edgeSlider();
->>>>>>> 225e92ee81cb1fc91d618da8cfa0547dab2b0872
     void backgroundRemoveSlider();
     ~Show();
 

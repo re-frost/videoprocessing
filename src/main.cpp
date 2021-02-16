@@ -6,13 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-    std::string filepath;
-    if (argc > 2)
-        filepath = argv[1];
-    else
-        filepath = "";
-=======
 
 //    if (videofile != ""){
 //        cap.open(videofile, cv::CAP_ANY);
@@ -21,7 +14,6 @@ int main(int argc, char *argv[])
 //    }
     std::string filepath = argv[1];
 
->>>>>>> 225e92ee81cb1fc91d618da8cfa0547dab2b0872
     VideoProcessing Workshop(filepath);
     // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, "Remove Background");
     std::cout << "Program finished normally" << std::endl;

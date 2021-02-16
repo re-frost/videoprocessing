@@ -5,7 +5,7 @@ Show::Show(){}
 
 Show::~Show(){}
 
-void Show::basicStream(VideoCapture &capture, String winName, std::string modus) {
+void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     Mat frame, result, hsv, edges;
 
@@ -13,9 +13,6 @@ void Show::basicStream(VideoCapture &capture, String winName, std::string modus)
     rect2.x = 654; rect2.y = 114; rect2.height = 83; rect2.width = 162;
 
     namedWindow(winName, WINDOW_AUTOSIZE);
-    if (modus == "Remove Background"){
-        Show::backgroundRemoveSlider();
-    }
 
     FrameProcessing modframe;
 
@@ -50,19 +47,12 @@ void Show::basicStream(VideoCapture &capture, String winName, std::string modus)
                 result = modframe.backgroundSubtraction(frame, frameNumberString);
             }else if (modus == "Remove Background"){
 
-<<<<<<< HEAD
-                // Show::backgroundRemoveSlider(frame);
-                result = modframe.removeBackground(frame, low_br, high_br);
-            }
-
-=======
                 result = modframe.removeBackground(frame, low_br, high_br, low_blure, kernel_size);
             }
 
 //            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
 //            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
 
->>>>>>> 225e92ee81cb1fc91d618da8cfa0547dab2b0872
             imshow(winName, result);
 
         }else if (frame.empty()){
@@ -76,26 +66,6 @@ void Show::basicStream(VideoCapture &capture, String winName, std::string modus)
     capture.release();
 }
 
-<<<<<<< HEAD
-void Show::backgroundRemoveSlider(){
-    // Mat grayImage;
-    // cv::cvtColor( frame, grayImage, cv::COLOR_BGR2GRAY );
-    // Mat frame_threshold;
-    // createTrackbar("Low  threshold", winName, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
-    // createTrackbar("upper  threshold", winName, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
-    createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
-    createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
-    // cv::inRange(frame, Scalar(low_br), Scalar(high_br), frame_threshold);
-    // return frame_threshold;
-}
-
-void Show::edgeSlider(Mat frame) {
-    
-    // Mat frame_threshold;
-    createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
-    createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
-    // cv::inRange(frame, Scalar(lower), Scalar(upper), frame_threshold);
-=======
 // Umbauen!!
 // https://www.ccoderun.ca/programming/doxygen/opencv/tutorial_erosion_dilatation.html
 void Show::backgroundRemoveSlider(){
@@ -110,7 +80,6 @@ void Show::edgeSlider() {
 
     createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
     createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
->>>>>>> 225e92ee81cb1fc91d618da8cfa0547dab2b0872
 }
 
 Mat Show::hsvSlider(Mat frame) {
