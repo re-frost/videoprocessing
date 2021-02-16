@@ -25,8 +25,8 @@ public:
     void showHSV();
     void basicStream(VideoCapture&, String, string);
     Mat hsvSlider(Mat);
-    void edgeSlider(Mat);
-    void backgroundRemoveSlider(Mat);
+    void edgeSlider();
+    void backgroundRemoveSlider();
     ~Show();
 
 private:

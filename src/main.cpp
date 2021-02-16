@@ -7,6 +7,11 @@
 int main(int argc, char *argv[])
 {
 
+//    if (videofile != ""){
+//        cap.open(videofile, cv::CAP_ANY);
+//    }else {
+//        cap.open(0);
+//    }
     std::string filepath = argv[1];
 
     VideoProcessing Workshop(filepath);

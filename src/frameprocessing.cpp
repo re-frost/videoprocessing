@@ -47,6 +47,41 @@ Mat FrameProcessing::findContoursBasic(Mat img, int area)
     return output;
 }
 
+Mat FrameProcessing::toHSV(Mat input) {
+
+    Mat hsvImage, gaussBlure;
+    GaussianBlur(input, gaussBlure, Size(5, 5), BORDER_CONSTANT);
+    cvtColor(gaussBlure, hsvImage, COLOR_BGR2HSV);
+    return hsvImage;
+}
+
+Mat FrameProcessing::autoCanny(Mat input, int lower, int upper) {
+
+    cv::Mat grayscale, gaussBlure, edges;
+    cv::cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
+    cv::GaussianBlur(grayscale, gaussBlure, cv::Size(15, 15), cv::BORDER_REPLICATE);
+
+    cv::Canny(gaussBlure, edges, lower, upper, 3);
+    Mat contours = findContoursBasic(edges, 10);
+    return contours;
+}
+
+Mat FrameProcessing::dilatation(Mat input, int type, int size) {
+
+    Mat output;
+    if( type == 0 ){ dilation_type = MORPH_RECT; }
+    else if( type == 1 ){ dilation_type = MORPH_CROSS; }
+    else if( type == 2) { dilation_type = MORPH_ELLIPSE; }
+
+    Mat element = getStructuringElement( type,
+                         Size( 2*size + 1, 2*size+1 ),
+                         Point( size, size ) );
+
+    dilate( input, output, element );
+
+    return output;
+}
+
 Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
     Mat aux;
     // if method is normalization
@@ -66,7 +101,7 @@ Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
     return aux;
 }
 
-Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure_Value) {
+Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure_Value, int kernel_s) {
         Mat gaussBlure, grayscale;
         cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
         GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
@@ -74,27 +109,10 @@ Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure
 
         // Binarize image for segment
         Mat img_thr;
-        cv::threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
-        return img_thr;
-}
+        threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
 
-Mat FrameProcessing::toHSV(Mat input) {
-
-    Mat hsvImage, gaussBlure;
-    GaussianBlur(input, gaussBlure, Size(5, 5), BORDER_CONSTANT);
-    cvtColor(gaussBlure, hsvImage, COLOR_BGR2HSV);
-    return hsvImage;
-}
-
-Mat FrameProcessing::autoCanny(Mat input, int lower, int upper) {
-
-    cv::Mat grayscale, gaussBlure, edges;
-    cv::cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
-    cv::GaussianBlur(grayscale, gaussBlure, cv::Size(7, 7), cv::BORDER_REPLICATE);
-
-    cv::Canny(gaussBlure, edges, lower, upper, 3);
-
-    return edges;
+        Mat dilate = dilatation(img_thr, 0, kernel_s);
+        return dilate;
 }
 
 FrameProcessing::~FrameProcessing(){}

@@ -15,6 +15,13 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
     namedWindow(winName, WINDOW_AUTOSIZE);
 
     FrameProcessing modframe;
+
+    if (modus == "edge") {
+        Show::edgeSlider();
+    }else if (modus == "Remove Background") {
+        Show::backgroundRemoveSlider();
+    }
+
     while(true) {
         int wk = cv::waitKey(250);
         capture >> frame;
@@ -30,9 +37,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
                 result = Show::hsvSlider(hsv);
             }else if (modus == "edge"){
 
-                edges = modframe.autoCanny(frame, lower, upper);
-                Show::edgeSlider(edges);
-                result = edges;
+                result = modframe.autoCanny(frame, lower, upper);
             }else if (modus == "Background Subtraction"){
 
                 stringstream ss;
@@ -40,14 +45,14 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
                 string frameNumberString = ss.str();
 
                 result = modframe.backgroundSubtraction(frame, frameNumberString);
-            }else if (modus == "removeBackground"){
+            }else if (modus == "Remove Background"){
 
-                Show::backgroundRemoveSlider(frame);
-                result = modframe.removeBackground(frame, low_br, high_br, low_blure);
+                result = modframe.removeBackground(frame, low_br, high_br, low_blure, kernel_size);
             }
 
-            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
-            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
+//            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
+//            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
+
             imshow(winName, result);
 
         }else if (frame.empty()){
@@ -61,19 +66,20 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
     capture.release();
 }
 
-void Show::backgroundRemoveSlider(Mat frame){
+// Umbauen!!
+// https://www.ccoderun.ca/programming/doxygen/opencv/tutorial_erosion_dilatation.html
+void Show::backgroundRemoveSlider(){
 
     createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
     createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
     createTrackbar("blure  threshold", BACKGROUNDREMOVE_SLIDER, &low_blure, max_blure, backgroundRemove_blure_thresh_trackbar);
-    cv::inRange(frame, Scalar(low_br, low_blure), Scalar(high_br, max_blure), frame_threshold);
+    createTrackbar( "Kernel size:\n 2n +1", BACKGROUNDREMOVE_SLIDER, &kernel_size, max_kernel_size, backgroundRemove_kernel_size_trackbar );
 }
 
-void Show::edgeSlider(Mat frame) {
+void Show::edgeSlider() {
 
     createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
     createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
-    cv::inRange(frame, Scalar(lower), Scalar(upper), frame_threshold);
 }
 
 Mat Show::hsvSlider(Mat frame) {

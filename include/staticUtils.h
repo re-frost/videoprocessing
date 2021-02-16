@@ -26,12 +26,16 @@ static int upper = upper_threshold;
 const String BACKGROUNDREMOVE_SLIDER = "Remove Background";
 const int max_value_BR = 255;
 const int max_blure = 51;
+const int max_kernel_size = 21;
 
 static int low_br = 0;
 static int high_br = 255;
 
 static int low_blure = 1;
 static int high_blure = max_blure;
+
+static int min_kernel = 0;
+static int kernel_size = max_kernel_size;
 
 static void on_low_H_thresh_trackbar(int, void *)
 {
@@ -102,6 +106,12 @@ static void backgroundRemove_blure_thresh_trackbar(int, void *)
         low_blure++;
     }
     setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, low_blure);
+}
+
+static void backgroundRemove_kernel_size_trackbar(int, void *)
+{
+    kernel_size = min(kernel_size, max_kernel_size);
+    setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, kernel_size);
 }
 
 //
