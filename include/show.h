@@ -30,7 +30,9 @@ public:
     ~Show();
 
 private:
-
+    Rect rect1;
+    Rect rect2;
+    Mat frame_threshold;
 };
 
 #endif // SHOWVIDEO_H

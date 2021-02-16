@@ -20,7 +20,7 @@ public:
 
 
 
-    Mat removeBackground(Mat, int, int);
+    Mat removeBackground(Mat, int, int, int);
     Mat removeLight(Mat, Mat, int);
     ~FrameProcessing();
 

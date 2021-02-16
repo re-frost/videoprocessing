@@ -11,7 +11,7 @@ FrameProcessing::FrameProcessing() {}
 Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) {
 
     Mat output, fgMask, gaussBlure, grayscale;
-    cv::cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(input, grayscale, COLOR_BGR2GRAY);
 
     GaussianBlur(grayscale, gaussBlure, Size(5, 5), BORDER_CONSTANT);
     pBackSub->apply(gaussBlure, fgMask);
@@ -66,11 +66,11 @@ Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
     return aux;
 }
 
-Mat FrameProcessing::removeBackground(Mat input, int lower, int upper) {
+Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure_Value) {
         Mat gaussBlure, grayscale;
         cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
-        GaussianBlur(grayscale, gaussBlure, cv::Size(21, 21), cv::BORDER_CONSTANT);
-        Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 1);
+        GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
+        Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 0);
 
         // Binarize image for segment
         Mat img_thr;

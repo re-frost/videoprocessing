@@ -17,7 +17,7 @@ VideoProcessing::VideoProcessing(std::string videofile)
     Show show;
 //    show.basicStream(capture, HSV_SLIDER, "HSV");
 //    show.basicStream(capture, EDGE_SLIDER, "edge");
-    show.basicStream(capture, BACKGROUNDREMOVE_SLIDER, "Remove Background");
+    show.basicStream(capture, BACKGROUNDREMOVE_SLIDER, "removeBackground");
 
 }
 

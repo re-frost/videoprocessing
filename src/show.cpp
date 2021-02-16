@@ -9,6 +9,9 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     Mat frame, result, hsv, edges;
 
+    rect1.x = 894; rect1.y = 233; rect1.height = 67; rect1.width = 393;
+    rect2.x = 654; rect2.y = 114; rect2.height = 83; rect2.width = 162;
+
     namedWindow(winName, WINDOW_AUTOSIZE);
 
     FrameProcessing modframe;
@@ -37,13 +40,14 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
                 string frameNumberString = ss.str();
 
                 result = modframe.backgroundSubtraction(frame, frameNumberString);
-            }else if (modus == "Remove Background"){
+            }else if (modus == "removeBackground"){
 
                 Show::backgroundRemoveSlider(frame);
-                result = modframe.removeBackground(frame, low_br, high_br);
+                result = modframe.removeBackground(frame, low_br, high_br, low_blure);
             }
 
-
+            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
+            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
             imshow(winName, result);
 
         }else if (frame.empty()){
@@ -58,15 +62,15 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 }
 
 void Show::backgroundRemoveSlider(Mat frame){
-    Mat frame_threshold;
+
     createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
     createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
-    cv::inRange(frame, Scalar(lower), Scalar(upper), frame_threshold);
+    createTrackbar("blure  threshold", BACKGROUNDREMOVE_SLIDER, &low_blure, max_blure, backgroundRemove_blure_thresh_trackbar);
+    cv::inRange(frame, Scalar(low_br, low_blure), Scalar(high_br, max_blure), frame_threshold);
 }
 
 void Show::edgeSlider(Mat frame) {
 
-    Mat frame_threshold;
     createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
     createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
     cv::inRange(frame, Scalar(lower), Scalar(upper), frame_threshold);
@@ -74,7 +78,6 @@ void Show::edgeSlider(Mat frame) {
 
 Mat Show::hsvSlider(Mat frame) {
 
-    Mat frame_threshold;
     createTrackbar("Low H", HSV_SLIDER, &low_H, max_value_H, on_low_H_thresh_trackbar);
     createTrackbar("High H", HSV_SLIDER, &high_H, max_value_H, on_high_H_thresh_trackbar);
     createTrackbar("Low S", HSV_SLIDER, &low_S, max_value, on_low_S_thresh_trackbar);
