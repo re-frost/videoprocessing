@@ -24,10 +24,16 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
         Show::hsvSlider();
     }
 
+    bool pausePressed = false;
+    
     while(true) {
         int wk = cv::waitKey(250);
-        capture >> frame;
-
+        if((char)wk == 'p'){
+            pausePressed = !pausePressed;
+        }else if(!((char)wk == 'p') && !pausePressed){
+            capture >> frame;
+        }
+            
         if (!frame.empty()) {
 
             if (modus == "unchangned"){
