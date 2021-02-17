@@ -3,7 +3,6 @@
 #include "frameprocessing.h"
 #include "staticUtils.h"
 
-
 using namespace cv;
 
 FrameProcessing::FrameProcessing() {}

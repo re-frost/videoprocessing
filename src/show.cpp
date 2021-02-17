@@ -7,7 +7,7 @@ Show::~Show(){}
 
 void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
-    Mat frame, result, hsv, edges;
+    Mat frame, result, hsv, edges, mask;
 
     rect1.x = 894; rect1.y = 233; rect1.height = 67; rect1.width = 393;
     rect2.x = 654; rect2.y = 114; rect2.height = 83; rect2.width = 162;
@@ -34,7 +34,9 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
             }else if (modus == "HSV"){
 
                 hsv = modframe.toHSV(frame);
-                result = Show::hsvSlider(hsv);
+                mask = Show::hsvSlider(hsv);
+                result = Mat();
+                bitwise_and(frame.clone(), frame.clone(), result, mask.clone());
             }else if (modus == "edge"){
 
                 result = modframe.autoCanny(frame, lower, upper);

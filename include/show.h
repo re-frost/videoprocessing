@@ -1,16 +1,15 @@
 ﻿#ifndef SHOW_H
 #define SHOW_H
-#include <string>
+// #include <string> //in frameprocessing.h
 #include <iostream>
 #include <sstream>
 
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/core/core.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/core/utility.hpp>
+// #include <opencv4/opencv2/highgui/highgui.hpp> //in staticUtils.h
+// #include <opencv4/opencv2/core/core.hpp> //in frameprocessing.h
+// #include <opencv4/opencv2/imgproc/imgproc.hpp> //in frameprocessing.h
+// #include <opencv4/opencv2/core/utility.hpp> //in staticUtils.h
+// #include "videoprocessing.h" //cyclic dependency between show.h and videoprocessing.h
 
-#include "videoprocessing.h"
 #include "frameprocessing.h"
 #include "staticUtils.h"
 

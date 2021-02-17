@@ -1,9 +1,9 @@
 #ifndef STATICUTILS_H
 #define STATICUTILS_H
-#include <string>
+// #include <string> // in frameprocessing.h
 
 #include <opencv4/opencv2/highgui/highgui.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
+// #include <opencv4/opencv2/imgproc/imgproc.hpp> // in frameprocessing.h
 #include <opencv4/opencv2/core/utility.hpp>
 
 #include "frameprocessing.h"
