@@ -37,9 +37,9 @@ Mat FrameProcessing::findContoursBasic(Mat img, int area)
         if (Area < area) {
             continue;
         }
-//        cv::Rect bb = cv::boundingRect(contours[i]);
-//        cv::rectangle(output, bb, randomColor(rng));
-//        std::cout << bb.x << " " << bb.y << " " << bb.height << " "<< bb.width << std::endl;
+    //    cv::Rect bb = cv::boundingRect(contours[i]);
+    //    cv::rectangle(output, bb, randomColor(rng));
+    //    std::cout << bb.x << " " << bb.y << " " << bb.height << " "<< bb.width << std::endl;
         cv::drawContours(output, contours, i, randomColor(rng));
 
     }
@@ -101,30 +101,22 @@ Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
 }
 
 Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure_Value, int kernel_s) {
-        Mat gaussBlure, grayscale;
-        cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
-        GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
-        Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 0);
+    Mat gaussBlure, grayscale;
+    cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
+    GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
+    Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 0);
 
-        // Binarize image for segment
-        Mat img_thr;
-        threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
+    // Binarize image for segment
+    Mat img_thr;
+    threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
 
-        Mat dilate = dilatation(img_thr, 0, kernel_s);
-        return dilate;
+    Mat dilate = dilatation(img_thr, 0, kernel_s);
+    return dilate;
 }
 
-Mat FrameProcessing::hsvFilter(Mat img) {
+Mat FrameProcessing::hsvFilter(Mat img, int low_H, int high_H, int low_S, int high_S, int low_V, int high_V) {
     Mat hsv = toHSV(img);
     Mat mask, frame_threshold;
-
-    low_H = getTrackbarPos("Low H", HSV_SLIDER);
-    high_H = getTrackbarPos("High H", HSV_SLIDER);
-    low_S = getTrackbarPos("Low S", HSV_SLIDER);
-    high_S = getTrackbarPos("High S", HSV_SLIDER);
-    low_V = getTrackbarPos("Low V", HSV_SLIDER);
-    high_V = getTrackbarPos("High V", HSV_SLIDER);
-    
     inRange(hsv, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), mask);
     bitwise_and(img, img, frame_threshold, mask);
     return frame_threshold;

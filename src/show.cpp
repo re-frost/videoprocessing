@@ -34,8 +34,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
                 result = frame;
             }else if (modus == "HSV"){
-                result = modframe.hsvFilter(frame);
-                
+                result = modframe.hsvFilter(frame, low_H, high_H, low_S, high_S, low_V, high_V);
             }else if (modus == "edge"){
 
                 result = modframe.autoCanny(frame, lower, upper);
