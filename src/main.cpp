@@ -12,7 +12,11 @@ int main(int argc, char *argv[])
 //    }else {
 //        cap.open(0);
 //    }
-    std::string filepath = argv[1];
+    std::string filepath;
+    if (argc > 2)
+        filepath = argv[1];
+    else
+        filepath = "";
 
     VideoProcessing Workshop(filepath);
     // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, "Remove Background");

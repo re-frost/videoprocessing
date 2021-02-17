@@ -31,7 +31,7 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 RUN pip3 install --upgrade pip
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-opencv
 RUN apt-get install -y libopencv-dev clang-format apt-utils libopencv-highgui-dev \
-			autoconf automake libtool libgtk-3-dev
+			autoconf automake libtool qt5-default
 
 # Install CMake 3.18.4
 RUN version=3.18 && build=4\
@@ -77,6 +77,7 @@ RUN cd ~/opencv_build/opencv && \
     -D WITH_CUBLAS=1 \
     -D CUDA_FAST_MATH=1 \
     -D WITH_OPENGL=ON \
+    -D WITH_QT=ON \
     -D WITH_GTK=ON \
     -D BUILD_SHARED_LIBS=ON .. \
 #    -D WITH_CUDNN=ON \
@@ -115,7 +116,6 @@ RUN apt-get update -y \
     libgstreamer-plugins-bad1.0-0 \
     libgstreamer-plugins-base1.0-dev \
     libgtk2.0-dev \
-    libgtk-3-dev \
     libhdf5-dev \
     libhdf5-serial-dev \
     libjpeg-dev \
@@ -159,8 +159,8 @@ RUN apt-get update -y \
   vim
 
 # for tensorflow-yolov4-tflite
-RUN pip3 install tensorflow==2.3.0rc0 absl-py matplotlib easydict pillow --use-feature=2020-resolver
-RUN apt-get install -y jq gdb
+RUN pip3 install tensorflow==2.3.0rc0 absl-py matplotlib easydict pillow PyQt5 --use-feature=2020-resolver
+RUN apt-get install -y jq gdb xauth
 
 # RUN apt-get install curl zip tar
 

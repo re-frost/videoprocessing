@@ -46,7 +46,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
                 result = modframe.backgroundSubtraction(frame, frameNumberString);
             }else if (modus == "Remove Background"){
-
+                
                 result = modframe.removeBackground(frame, low_br, high_br, low_blure, kernel_size);
             }
 
