@@ -22,6 +22,7 @@ public:
     Mat dilatation(Mat, int, int);
     Mat removeBackground(Mat, int, int, int, int);
     Mat removeLight(Mat, Mat, int);
+    Mat hsvFilter(Mat);
     ~FrameProcessing();
 
 private:

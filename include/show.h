@@ -23,7 +23,7 @@ public:
 
     void showHSV();
     void basicStream(VideoCapture&, String, string);
-    Mat hsvSlider(Mat);
+    void hsvSlider();
     void edgeSlider();
     void backgroundRemoveSlider();
     ~Show();
@@ -31,7 +31,6 @@ public:
 private:
     Rect rect1;
     Rect rect2;
-    Mat frame_threshold;
 };
 
 #endif // SHOWVIDEO_H

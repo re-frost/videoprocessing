@@ -114,4 +114,20 @@ Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure
         return dilate;
 }
 
+Mat FrameProcessing::hsvFilter(Mat img) {
+    Mat hsv = toHSV(img);
+    Mat mask, frame_threshold;
+
+    low_H = getTrackbarPos("Low H", HSV_SLIDER);
+    high_H = getTrackbarPos("High H", HSV_SLIDER);
+    low_S = getTrackbarPos("Low S", HSV_SLIDER);
+    high_S = getTrackbarPos("High S", HSV_SLIDER);
+    low_V = getTrackbarPos("Low V", HSV_SLIDER);
+    high_V = getTrackbarPos("High V", HSV_SLIDER);
+    
+    inRange(hsv, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), mask);
+    bitwise_and(img, img, frame_threshold, mask);
+    return frame_threshold;
+}
+
 FrameProcessing::~FrameProcessing(){}
