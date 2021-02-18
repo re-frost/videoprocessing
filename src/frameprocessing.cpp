@@ -7,6 +7,14 @@ using namespace cv;
 
 FrameProcessing::FrameProcessing() {}
 
+Mat FrameProcessing::hsvFilter(Mat img, int low_H, int high_H, int low_S, int high_S, int low_V, int high_V) {
+    Mat hsv = toHSV(img);
+    Mat mask, frame_threshold;
+    inRange(hsv, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), mask);
+    bitwise_and(img, img, frame_threshold, mask);
+    return frame_threshold;
+}
+
 Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) {
 
     Mat output, fgMask, gaussBlure, grayscale;
@@ -22,7 +30,8 @@ Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) 
     putText(fgMask, frameNumberString.c_str(), cv::Point(15, 15),
             FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
-    output = findContoursMat(fgMask, 5000);
+    bitwise_and(input, input, output, fgMask);
+
     return output;
 }
 
@@ -48,13 +57,6 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
     return img;
 }
 
-Mat FrameProcessing::toHSV(Mat input) {
-
-    Mat hsvImage, gaussBlure;
-    GaussianBlur(input, gaussBlure, Size(5, 5), BORDER_CONSTANT);
-    cvtColor(gaussBlure, hsvImage, COLOR_BGR2HSV);
-    return hsvImage;
-}
 
 Mat FrameProcessing::autoCanny(Mat input, int lower, int upper, int kernel_s) {
 
@@ -64,8 +66,8 @@ Mat FrameProcessing::autoCanny(Mat input, int lower, int upper, int kernel_s) {
 
     Canny(gaussBlure, edges, lower, upper, 3);
     Mat output = dilatation(edges, 0, kernel_s);
-    Mat contours = findContoursMat(output, 100);
-    return contours;
+//    Mat contours = findContoursMat(output, 100);
+    return output;
 }
 
 Mat FrameProcessing::dilatation(Mat input, int type, int size) {
@@ -117,12 +119,12 @@ Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure
     return dilate;
 }
 
-Mat FrameProcessing::hsvFilter(Mat img, int low_H, int high_H, int low_S, int high_S, int low_V, int high_V) {
-    Mat hsv = toHSV(img);
-    Mat mask, frame_threshold;
-    inRange(hsv, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), mask);
-    bitwise_and(img, img, frame_threshold, mask);
-    return frame_threshold;
+Mat FrameProcessing::toHSV(Mat input) {
+
+    Mat hsvImage, gaussBlure;
+    GaussianBlur(input, gaussBlure, Size(5, 5), BORDER_CONSTANT);
+    cvtColor(gaussBlure, hsvImage, COLOR_BGR2HSV);
+    return hsvImage;
 }
 
 FrameProcessing::~FrameProcessing(){}

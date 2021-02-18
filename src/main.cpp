@@ -7,18 +7,19 @@
 int main(int argc, char *argv[])
 {
     std::string filepath;
-    if (argc > 2)
+    if (argc > 1)
         filepath = argv[1];
     else
         filepath = "";
 
     VideoProcessing Workshop(filepath);
-    // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, "Remove Background");
-    // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
-    // Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
-    // Workshop.showBasicStream(EDGE_SLIDER, "edge");
-    // Workshop.showBasicStream(HSV_SLIDER, "HSV");
+
+//    Workshop.showBasicStream("unchangned", "unchangned");
     Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
+//    Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
+//    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
+//     Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+
   
     std::cout << "Program finished normally" << std::endl;
     return 0;

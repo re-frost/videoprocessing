@@ -18,7 +18,7 @@ const int max_value = 255;
 static int low_H = 0, low_S = 0, low_V = 0;
 static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
-const String EDGE_SLIDER = "Edge Slide";
+const String EDGE_SLIDER = "Edge Slider";
 const int upper_threshold = 100;
 static int lower = 0;
 static int upper = upper_threshold;

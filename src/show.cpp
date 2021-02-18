@@ -16,7 +16,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     FrameProcessing modframe;
 
-    if (modus == "edge") {
+    if (modus == "Edge Slider") {
         Show::edgeSlider();
     }else if (modus == "Remove Background") {
         Show::backgroundRemoveSlider();
@@ -40,8 +40,9 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
                 result = frame;
             }else if (modus == "HSV"){
+
                 result = modframe.hsvFilter(frame, low_H, high_H, low_S, high_S, low_V, high_V);
-            }else if (modus == "edge"){
+            }else if (modus == "Edge Slider"){
 
                 result = modframe.autoCanny(frame, lower, upper, min_kernel);
             }else if (modus == "Background Subtraction"){
@@ -83,8 +84,8 @@ void Show::backgroundRemoveSlider(){
 }
 
 void Show::edgeSlider() {
-    createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
-    createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
+    createTrackbar("Low  threshold", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
+    createTrackbar("upper  threshold", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
     createTrackbar( "Kernel size:\n 2n +1", EDGE_SLIDER, &min_kernel, max_kernel_size, edge_dilate_kernel_size_trackbar);
 }
 

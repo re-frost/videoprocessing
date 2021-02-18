@@ -7,12 +7,8 @@ VideoProcessing::VideoProcessing(std::string videofile)
     // Class to maniputate Videos
     : filepath{videofile} {
 
-    // Capture contains viodeostream
     capture = openCapture(videofile);
 
-    // HSV with slider: HSV_SLIDER
-    // Canny with slider: EDGE_SLIDER
-    // Remove Background: BACKGROUNDREMOVE_SLIDER
 
 }
 
