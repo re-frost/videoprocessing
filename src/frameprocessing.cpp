@@ -3,7 +3,6 @@
 #include "frameprocessing.h"
 #include "staticUtils.h"
 
-
 using namespace cv;
 
 FrameProcessing::FrameProcessing() {}
@@ -39,9 +38,11 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
         if (Area < area) {
             continue;
         }
+
 //        cv::Rect bb = cv::boundingRect(contours[i]);
 //        cv::rectangle(img, bb, randomColor(rng));
         cv::drawContours(img, contours, i, randomColor(rng), 5);
+
 
     }
     return img;
@@ -103,17 +104,25 @@ Mat FrameProcessing::removeLight(Mat img, Mat pattern, int method){
 }
 
 Mat FrameProcessing::removeBackground(Mat input, int lower, int upper, int blure_Value, int kernel_s) {
-        Mat gaussBlure, grayscale;
-        cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
-        GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
-        Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 0);
+    Mat gaussBlure, grayscale;
+    cvtColor(input, grayscale, cv::COLOR_RGB2GRAY);
+    GaussianBlur(grayscale, gaussBlure, cv::Size(blure_Value, blure_Value), cv::BORDER_CONSTANT);
+    Mat noLight = FrameProcessing::removeLight(grayscale, gaussBlure, 0);
 
-        // Binarize image for segment
-        Mat img_thr;
-        threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
+    // Binarize image for segment
+    Mat img_thr;
+    threshold(noLight, img_thr, lower, upper, cv::THRESH_BINARY);
 
-        Mat dilate = dilatation(img_thr, 0, kernel_s);
-        return dilate;
+    Mat dilate = dilatation(img_thr, 0, kernel_s);
+    return dilate;
+}
+
+Mat FrameProcessing::hsvFilter(Mat img, int low_H, int high_H, int low_S, int high_S, int low_V, int high_V) {
+    Mat hsv = toHSV(img);
+    Mat mask, frame_threshold;
+    inRange(hsv, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), mask);
+    bitwise_and(img, img, frame_threshold, mask);
+    return frame_threshold;
 }
 
 FrameProcessing::~FrameProcessing(){}

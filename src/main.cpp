@@ -2,18 +2,24 @@
 #include <string>
 
 #include "videoprocessing.h"
-
+// #include "staticUtils.h" // videoprocessing.h -> show.h -> in staticUtils.h
 
 int main(int argc, char *argv[])
 {
     std::string filepath;
-    if (argc > 1){
+    if (argc > 2)
         filepath = argv[1];
-    }else {
+    else
         filepath = "";
-    }
 
     VideoProcessing Workshop(filepath);
+    // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, "Remove Background");
+    // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
+    // Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+    // Workshop.showBasicStream(EDGE_SLIDER, "edge");
+    // Workshop.showBasicStream(HSV_SLIDER, "HSV");
+    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
+  
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }
