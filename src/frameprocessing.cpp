@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "frameprocessing.h"
-#include "staticUtils.h"
+#include "frameprocessing.hpp"
+#include "staticUtils.hpp"
 
 using namespace cv;
 

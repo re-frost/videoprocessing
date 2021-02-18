@@ -5,7 +5,7 @@
 
 #include <opencv4/opencv2/videoio.hpp>
 
-#include "show.h"
+#include "show.hpp"
 
 using namespace cv;
 class VideoProcessing {

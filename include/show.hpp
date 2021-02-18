@@ -10,8 +10,8 @@
 // #include <opencv4/opencv2/core/utility.hpp> //in staticUtils.h
 // #include "videoprocessing.h" //cyclic dependency between show.h and videoprocessing.h
 
-#include "frameprocessing.h"
-#include "staticUtils.h"
+#include "frameprocessing.hpp"
+#include "staticUtils.hpp"
 
 using namespace cv;
 using namespace std;

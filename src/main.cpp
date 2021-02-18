@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 
-#include "videoprocessing.h"
+#include "videoprocessing.hpp"
 // #include "staticUtils.h" // videoprocessing.h -> show.h -> in staticUtils.h
 
 int main(int argc, char *argv[])
@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     VideoProcessing Workshop(filepath);
 
 //    Workshop.showBasicStream("unchangned", "unchangned");
-    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
-//    Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
+//    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
+    Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
 //    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
 //     Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
 

@@ -1,5 +1,5 @@
-#include "videoprocessing.h"
-#include "staticUtils.h"
+#include "videoprocessing.hpp"
+#include "staticUtils.hpp"
 
 using namespace cv;
 

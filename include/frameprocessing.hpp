@@ -27,7 +27,7 @@ public:
     ~FrameProcessing();
 
 private:
-    Ptr<BackgroundSubtractor> pBackSub = createBackgroundSubtractorMOG2(5000, 16, true);
+    Ptr<BackgroundSubtractor> pBackSub = createBackgroundSubtractorKNN(5000, 16, true);
     MorphShapes dilation_type;
 };
 
