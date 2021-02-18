@@ -22,10 +22,11 @@ Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) 
     putText(fgMask, frameNumberString.c_str(), cv::Point(15, 15),
             FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
-    return fgMask;
+    output = findContoursMat(fgMask, 5000);
+    return output;
 }
 
-Mat FrameProcessing::findContoursBasic(Mat img, int area)
+Mat FrameProcessing::findContoursMat(Mat img, int area)
 {
     vector<vector<Point> > contours;
     findContours(img, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -37,13 +38,14 @@ Mat FrameProcessing::findContoursBasic(Mat img, int area)
         if (Area < area) {
             continue;
         }
-    //    cv::Rect bb = cv::boundingRect(contours[i]);
-    //    cv::rectangle(output, bb, randomColor(rng));
-    //    std::cout << bb.x << " " << bb.y << " " << bb.height << " "<< bb.width << std::endl;
-        cv::drawContours(output, contours, i, randomColor(rng));
+
+//        cv::Rect bb = cv::boundingRect(contours[i]);
+//        cv::rectangle(img, bb, randomColor(rng));
+        cv::drawContours(img, contours, i, randomColor(rng), 5);
+
 
     }
-    return output;
+    return img;
 }
 
 Mat FrameProcessing::toHSV(Mat input) {
@@ -54,14 +56,15 @@ Mat FrameProcessing::toHSV(Mat input) {
     return hsvImage;
 }
 
-Mat FrameProcessing::autoCanny(Mat input, int lower, int upper) {
+Mat FrameProcessing::autoCanny(Mat input, int lower, int upper, int kernel_s) {
 
-    cv::Mat grayscale, gaussBlure, edges;
-    cv::cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
-    cv::GaussianBlur(grayscale, gaussBlure, cv::Size(15, 15), cv::BORDER_REPLICATE);
+    Mat grayscale, gaussBlure, edges;
+    cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
+    GaussianBlur(grayscale, gaussBlure, Size(15, 15), cv::BORDER_REPLICATE);
 
-    cv::Canny(gaussBlure, edges, lower, upper, 3);
-    Mat contours = findContoursBasic(edges, 10);
+    Canny(gaussBlure, edges, lower, upper, 3);
+    Mat output = dilatation(edges, 0, kernel_s);
+    Mat contours = findContoursMat(output, 100);
     return contours;
 }
 

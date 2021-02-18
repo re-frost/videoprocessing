@@ -6,12 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-
-//    if (videofile != ""){
-//        cap.open(videofile, cv::CAP_ANY);
-//    }else {
-//        cap.open(0);
-//    }
     std::string filepath;
     if (argc > 2)
         filepath = argv[1];
@@ -25,7 +19,7 @@ int main(int argc, char *argv[])
     // Workshop.showBasicStream(EDGE_SLIDER, "edge");
     // Workshop.showBasicStream(HSV_SLIDER, "HSV");
     Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
-
+  
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }
