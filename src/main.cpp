@@ -14,11 +14,12 @@ int main(int argc, char *argv[])
 
     VideoProcessing Workshop(filepath);
 
-//    Workshop.showBasicStream("unchangned", "unchangned");
-//    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
-    Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
-//    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
-//     Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+    // Workshop.showBasicStream("unchangned", "unchangned");
+    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER, true);
+    // Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
+    // Workshop.showBasicStream(SIGMA_EDGE_SLIDER, SIGMA_EDGE_SLIDER, true);
+    // Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
+    // Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
 
   
     std::cout << "Program finished normally" << std::endl;

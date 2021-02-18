@@ -6,10 +6,7 @@ using namespace cv;
 VideoProcessing::VideoProcessing(std::string videofile)
     // Class to maniputate Videos
     : filepath{videofile} {
-
     capture = openCapture(videofile);
-
-
 }
 
 VideoCapture VideoProcessing::openCapture(std::string videofile) {
@@ -24,9 +21,9 @@ VideoCapture VideoProcessing::openCapture(std::string videofile) {
     return cap;
 }
 
-void VideoProcessing::showBasicStream(std::string windowName, std::string modus){
+void VideoProcessing::showBasicStream(std::string windowName, std::string modus, bool showOriginal){
     Show show;
-    show.basicStream(capture, (String)windowName, modus);
+    show.basicStream(capture, (String)windowName, modus, showOriginal);
 }
 
 VideoProcessing::~VideoProcessing(){}

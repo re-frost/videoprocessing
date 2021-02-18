@@ -57,6 +57,56 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
     return img;
 }
 
+Mat FrameProcessing::autoCanny(Mat input, int sigma, int kernel_s) {
+
+    Mat grayscale, gaussBlure, edges;
+    cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
+    GaussianBlur(grayscale, gaussBlure, Size(15, 15), cv::BORDER_REPLICATE);
+    auto v = medianMat(gaussBlure);
+    lower = max(0, int((1.0 - sigma/100.0) * v));
+    upper = min(255, int((1.0 + sigma/100.0) * v));
+    Canny(gaussBlure, edges, lower, upper, 3);
+    Mat output = dilatation(edges, 0, kernel_s);
+//    Mat contours = findContoursMat(output, 100);
+    return output;
+}
+
+int FrameProcessing::medianMat(const cv::Mat Input){
+    // COMPUTE HISTOGRAM OF SINGLE CHANNEL MATRIX
+    const int nVals = pow(2, sizeof(*(Input.data))*8);
+    float range[] = { 0.0, (float)nVals };
+    const float* histRange = { range };
+    bool uniform = true;
+    bool accumulate = false;
+    cv::Mat hist;
+    calcHist(&Input, 1, 0, cv::Mat(), hist, 1, &nVals, &histRange, uniform, accumulate);
+    // COMPUTE CUMULATIVE DISTRIBUTION FUNCTION (CDF)
+    cv::Mat cdf;
+    hist.copyTo(cdf);
+    for (int i = 1; i <= nVals-1; i++){
+        cdf.at<float>(i) += cdf.at<float>(i - 1);
+    }
+    cdf /= Input.total();
+
+    // COMPUTE MEDIAN
+    int medianVal;
+    for (int i = 0; i <= nVals-1; i++){
+        if (cdf.at<float>(i) >= 0.5) { 
+            medianVal = i;
+            break;
+        }
+    }
+    return medianVal; 
+}
+
+// int FrameProcessing::medianMat(const cv::Mat Input)
+// {
+//    Input = Input.reshape(1, Input.rows*Input.cols);// spread Input Mat to single row
+//    std::vector<double> vecFromMat;
+//    Input.copyTo(vecFromMat); // Copy Input Mat to vector vecFromMat
+//    std::nth_element(vecFromMat.begin(), vecFromMat.begin() + vecFromMat.size() / 2, vecFromMat.end());
+//    return vecFromMat[vecFromMat.size() / 2];
+// }
 
 Mat FrameProcessing::autoCanny(Mat input, int lower, int upper, int kernel_s) {
 

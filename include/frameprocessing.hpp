@@ -14,12 +14,12 @@ class FrameProcessing{
 public:
     FrameProcessing();
     Mat toHSV(Mat);
+    Mat autoCanny(Mat, int, int);
     Mat autoCanny(Mat, int, int, int);
     Mat findContoursMat(Mat, int);
-
     Mat backgroundSubtraction(Mat, string);
 
-
+    int medianMat(const cv::Mat);
     Mat dilatation(Mat, int, int);
     Mat removeBackground(Mat, int, int, int, int);
     Mat removeLight(Mat, Mat, int);

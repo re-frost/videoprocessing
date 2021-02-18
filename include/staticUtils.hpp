@@ -92,6 +92,23 @@ static void edge_dilate_kernel_size_trackbar(int, void *)
     setTrackbarPos("Blure threshold", EDGE_SLIDER, min_kernel);
 }
 
+	// Sigma Threshold Auto Canny	
+const String SIGMA_EDGE_SLIDER = "Sigma Edge Slider";	
+const int maxSigma = 100;	
+static int sigma = 0;
+
+static void sigma_edge_thresh_trackbar(int, void *)	
+{	
+    sigma = min(maxSigma, sigma);	
+    setTrackbarPos("Sigma threshold", SIGMA_EDGE_SLIDER, sigma);	
+}
+
+static void sigma_edge_dilate_kernel_size_trackbar(int, void *)
+{
+    min_kernel = min(min_kernel, kernel_size);
+    setTrackbarPos("Blure threshold", SIGMA_EDGE_SLIDER, min_kernel);
+}
+
 // Threshold Background REMOVE
 static void on_low_backgroundRemove_thresh_trackbar(int, void *)
 {

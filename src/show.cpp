@@ -5,7 +5,7 @@ Show::Show(){}
 
 Show::~Show(){}
 
-void Show::basicStream(VideoCapture &capture, String winName, string modus) {
+void Show::basicStream(VideoCapture &capture, String winName, string modus, bool showOriginal) {
 
     Mat frame, result, hsv, edges;
 
@@ -18,6 +18,8 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     if (modus == "Edge Slider") {
         Show::edgeSlider();
+    }else if (modus == "Sigma Edge Slider") {
+        Show::sigmaEdgeSlider();
     }else if (modus == "Remove Background") {
         Show::backgroundRemoveSlider();
     }else if (modus == "HSV") {
@@ -45,6 +47,9 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
             }else if (modus == "Edge Slider"){
 
                 result = modframe.autoCanny(frame, lower, upper, min_kernel);
+            }else if (modus == "Sigma Edge Slider"){
+
+                result = modframe.autoCanny(frame, sigma, min_kernel);
             }else if (modus == "Background Subtraction"){
 
                 stringstream ss;
@@ -62,7 +67,8 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 //            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
 
             imshow(winName, result);
-
+            if (showOriginal)
+                imshow("Original Frame", frame);
         }else if (frame.empty()){
             // Autorepeat
             capture.set(CAP_PROP_POS_FRAMES, 1);
@@ -87,6 +93,11 @@ void Show::edgeSlider() {
     createTrackbar("Low  threshold", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
     createTrackbar("upper  threshold", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
     createTrackbar( "Kernel size:\n 2n +1", EDGE_SLIDER, &min_kernel, max_kernel_size, edge_dilate_kernel_size_trackbar);
+}
+
+void Show::sigmaEdgeSlider() {
+    createTrackbar("Sigma threshold", SIGMA_EDGE_SLIDER, &sigma, maxSigma, sigma_edge_thresh_trackbar);
+    createTrackbar( "Kernel size:\n 2n +1", SIGMA_EDGE_SLIDER, &min_kernel, max_kernel_size, sigma_edge_dilate_kernel_size_trackbar);
 }
 
 void Show::hsvSlider() {

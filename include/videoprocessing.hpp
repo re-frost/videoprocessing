@@ -14,7 +14,7 @@ public:
     VideoProcessing(std::string);
 
     VideoCapture openCapture(std::string);
-    void showBasicStream(String, std::string = "unchanged");
+    void showBasicStream(String, std::string = "unchanged", bool = false);
     ~VideoProcessing();
 
 private:

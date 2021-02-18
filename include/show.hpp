@@ -22,9 +22,10 @@ public:
     Show();
 
     void showHSV();
-    void basicStream(VideoCapture&, String, string);
+    void basicStream(VideoCapture&, String, string, bool);
     void hsvSlider();
     void edgeSlider();
+    void sigmaEdgeSlider();
     void backgroundRemoveSlider();
     ~Show();
 
