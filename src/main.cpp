@@ -6,16 +6,14 @@
 
 int main(int argc, char *argv[])
 {
-
-//    if (videofile != ""){
-//        cap.open(videofile, cv::CAP_ANY);
-//    }else {
-//        cap.open(0);
-//    }
-    std::string filepath = argv[1];
+    std::string filepath;
+    if (argc > 1){
+        filepath = argv[1];
+    }else {
+        filepath = "";
+    }
 
     VideoProcessing Workshop(filepath);
-
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }

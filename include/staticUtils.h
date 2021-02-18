@@ -86,6 +86,12 @@ static void on_heigh_edge_thresh_trackbar(int, void *)
     setTrackbarPos("upper threshold", EDGE_SLIDER, upper);
 }
 
+static void edge_dilate_kernel_size_trackbar(int, void *)
+{
+    min_kernel = min(min_kernel, kernel_size);
+    setTrackbarPos("Blure threshold", EDGE_SLIDER, min_kernel);
+}
+
 // Threshold Background REMOVE
 static void on_low_backgroundRemove_thresh_trackbar(int, void *)
 {
@@ -110,8 +116,8 @@ static void backgroundRemove_blure_thresh_trackbar(int, void *)
 
 static void backgroundRemove_kernel_size_trackbar(int, void *)
 {
-    kernel_size = min(kernel_size, max_kernel_size);
-    setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, kernel_size);
+    min_kernel = min(min_kernel, kernel_size);
+    setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, min_kernel);
 }
 
 //

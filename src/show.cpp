@@ -37,7 +37,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
                 result = Show::hsvSlider(hsv);
             }else if (modus == "edge"){
 
-                result = modframe.autoCanny(frame, lower, upper);
+                result = modframe.autoCanny(frame, lower, upper, min_kernel);
             }else if (modus == "Background Subtraction"){
 
                 stringstream ss;
@@ -47,7 +47,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
                 result = modframe.backgroundSubtraction(frame, frameNumberString);
             }else if (modus == "Remove Background"){
 
-                result = modframe.removeBackground(frame, low_br, high_br, low_blure, kernel_size);
+                result = modframe.removeBackground(frame, low_br, high_br, low_blure, min_kernel);
             }
 
 //            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
@@ -73,13 +73,14 @@ void Show::backgroundRemoveSlider(){
     createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
     createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
     createTrackbar("blure  threshold", BACKGROUNDREMOVE_SLIDER, &low_blure, max_blure, backgroundRemove_blure_thresh_trackbar);
-    createTrackbar( "Kernel size:\n 2n +1", BACKGROUNDREMOVE_SLIDER, &kernel_size, max_kernel_size, backgroundRemove_kernel_size_trackbar );
+    createTrackbar( "Kernel size:\n 2n +1", BACKGROUNDREMOVE_SLIDER, &min_kernel, max_kernel_size, backgroundRemove_kernel_size_trackbar);
 }
 
 void Show::edgeSlider() {
 
     createTrackbar("Low  edge", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
     createTrackbar("upper  edge", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
+    createTrackbar( "Kernel size:\n 2n +1", EDGE_SLIDER, &min_kernel, max_kernel_size, edge_dilate_kernel_size_trackbar);
 }
 
 Mat Show::hsvSlider(Mat frame) {

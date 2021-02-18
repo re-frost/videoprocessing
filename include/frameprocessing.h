@@ -14,8 +14,9 @@ class FrameProcessing{
 public:
     FrameProcessing();
     Mat toHSV(Mat);
-    Mat autoCanny(Mat, int, int);
-    Mat findContoursBasic(Mat, int);
+    Mat autoCanny(Mat, int, int, int);
+    Mat findContoursMat(Mat, int);
+
     Mat backgroundSubtraction(Mat, string);
 
 

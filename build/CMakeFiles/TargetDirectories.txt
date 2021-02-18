@@ -1,0 +1,3 @@
+/home/felix/c++Workspace/videoprocessing/build/CMakeFiles/rebuild_cache.dir
+/home/felix/c++Workspace/videoprocessing/build/CMakeFiles/edit_cache.dir
+/home/felix/c++Workspace/videoprocessing/build/CMakeFiles/videoprocessing.dir
