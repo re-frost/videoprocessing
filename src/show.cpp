@@ -4,7 +4,6 @@ using namespace cv;
 Show::Show(){}
 
 Show::~Show(){}
-
 void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     Mat frame, result, hsv, edges;
@@ -15,19 +14,19 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
     namedWindow(winName, WINDOW_AUTOSIZE);
 
     FrameProcessing modframe;
+    ColorTracking colortrack(winName);
 
-    if (modus == "Edge Slider") {
+    if (modus == "Edge") {
         Show::edgeSlider();
     }else if (modus == "Remove Background") {
         Show::backgroundRemoveSlider();
-    }else if (modus == "HSV") {
+    }else if (modus == "HSV Slider") {
         Show::hsvSlider();
     }
 
     bool pausePressed = false;
-    
     while(true) {
-        int wk = cv::waitKey(250);
+        int wk = cv::waitKey(150);
         if((char)wk == 'p'){
             pausePressed = !pausePressed;
         }else if(!((char)wk == 'p') && !pausePressed){
@@ -39,10 +38,10 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
             if (modus == "unchangned"){
 
                 result = frame;
-            }else if (modus == "HSV"){
+            }else if (modus == "HSV Slider"){
 
                 result = modframe.hsvFilter(frame, low_H, high_H, low_S, high_S, low_V, high_V);
-            }else if (modus == "Edge Slider"){
+            }else if (modus == "Edge"){
 
                 result = modframe.autoCanny(frame, lower, upper, min_kernel);
             }else if (modus == "Background Subtraction"){
@@ -55,12 +54,13 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
             }else if (modus == "Remove Background"){
 
                 result = modframe.removeBackground(frame, low_br, high_br, low_blure, min_kernel);
+            }else if(modus == "Color Tracking"){
 
+                result = colortrack.colorTracking(frame);
             }
 
 //            cv::rectangle(result, rect1, Scalar( 255, 0, 0 ), 3);
 //            cv::rectangle(result, rect2, Scalar( 255, 0, 0 ), 3);
-
             imshow(winName, result);
 
         }else if (frame.empty()){
@@ -77,15 +77,15 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 // Umbauen!!
 // https://www.ccoderun.ca/programming/doxygen/opencv/tutorial_erosion_dilatation.html
 void Show::backgroundRemoveSlider(){
-    createTrackbar("Low  threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
-    createTrackbar("upper  threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
-    createTrackbar("blure  threshold", BACKGROUNDREMOVE_SLIDER, &low_blure, max_blure, backgroundRemove_blure_thresh_trackbar);
+    createTrackbar("Low threshold", BACKGROUNDREMOVE_SLIDER, &low_br, max_value_BR, on_low_backgroundRemove_thresh_trackbar);
+    createTrackbar("upper threshold", BACKGROUNDREMOVE_SLIDER, &high_br, max_value_BR, on_heigh_backgroundRemove_thresh_trackbar);
+    createTrackbar("blure threshold", BACKGROUNDREMOVE_SLIDER, &low_blure, max_blure, backgroundRemove_blure_thresh_trackbar);
     createTrackbar( "Kernel size:\n 2n +1", BACKGROUNDREMOVE_SLIDER, &min_kernel, max_kernel_size, backgroundRemove_kernel_size_trackbar);
 }
 
 void Show::edgeSlider() {
-    createTrackbar("Low  threshold", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
-    createTrackbar("upper  threshold", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
+    createTrackbar("Low threshold", EDGE_SLIDER, &lower, upper_threshold, on_low_edge_thresh_trackbar);
+    createTrackbar("upper threshold", EDGE_SLIDER, &upper, upper_threshold, on_heigh_edge_thresh_trackbar);
     createTrackbar( "Kernel size:\n 2n +1", EDGE_SLIDER, &min_kernel, max_kernel_size, edge_dilate_kernel_size_trackbar);
 }
 

@@ -9,5 +9,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-add_executable(videoprocessing src/main.cpp src/videoprocessing.cpp src/show.cpp src/frameprocessing.cpp include/staticUtils.hpp)
+add_executable(videoprocessing
+    src/main.cpp
+    src/videoprocessing.cpp
+    src/show.cpp
+    src/frameprocessing.cpp
+    include/staticUtils.hpp
+    src/objecttracking.cpp
+    src/target.cpp
+    src/colortracking.cpp)
+
 target_link_libraries( videoprocessing ${OpenCV_LIBS} )

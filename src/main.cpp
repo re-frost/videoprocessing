@@ -1,8 +1,8 @@
 ﻿#include <iostream>
 #include <string>
 
+#include "objecttracking.hpp"
 #include "videoprocessing.hpp"
-// #include "staticUtils.h" // videoprocessing.h -> show.h -> in staticUtils.h
 
 int main(int argc, char *argv[])
 {
@@ -15,17 +15,18 @@ int main(int argc, char *argv[])
     VideoProcessing Workshop(filepath);
 
 //    Workshop.showBasicStream("unchangned", "unchangned");
-//    Workshop.showBasicStream(HSV_SLIDER, HSV_SLIDER);
-    Workshop.showBasicStream(EDGE_SLIDER, EDGE_SLIDER);
+//    Workshop.showBasicStream(HSV_SLIDER, "HSV Slider");
+//    Workshop.showBasicStream(EDGE_SLIDER, "Edge");
 //    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
-//     Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+//    Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+    Workshop.showBasicStream("Color Tracking", "Color Tracking");
 
+
+//    ObjectTracking objectdetection(filepath);
   
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }
-
-
 
 /*
 +--------+----+----+----+----+------+------+------+------+
@@ -244,3 +245,6 @@ int main(int argc, char *argv[])
 //    cap.release();
 
 //}
+
+
+

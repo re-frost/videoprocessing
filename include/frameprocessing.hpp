@@ -6,6 +6,10 @@
 #include <opencv4/opencv2/video/background_segm.hpp>
 #include <opencv4/opencv2/imgproc/imgproc.hpp>
 #include <opencv4/opencv2/videoio.hpp>
+#include <opencv4/opencv2/video/tracking.hpp>
+#include <opencv4/opencv2/highgui/highgui.hpp>
+
+#include "staticUtils.hpp"
 
 using namespace cv;
 using namespace std;
@@ -24,6 +28,7 @@ public:
     Mat removeBackground(Mat, int, int, int, int);
     Mat removeLight(Mat, Mat, int);
     Mat hsvFilter(Mat, int, int, int, int, int, int);
+
     ~FrameProcessing();
 
 private:

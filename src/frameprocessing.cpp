@@ -1,9 +1,11 @@
 #include <iostream>
 
 #include "frameprocessing.hpp"
-#include "staticUtils.hpp"
+
 
 using namespace cv;
+using namespace std;
+// Color tracking
 
 FrameProcessing::FrameProcessing() {}
 
@@ -24,10 +26,10 @@ Mat FrameProcessing::backgroundSubtraction(Mat input, string frameNumberString) 
     pBackSub->apply(gaussBlure, fgMask);
 
     //get the frame number and write it on the current frame
-    rectangle(fgMask, cv::Point(10, 2), cv::Point(100,20),
+    rectangle(fgMask, Point(10, 2), Point(100,20),
               cv::Scalar(255,255,255), -1);
 
-    putText(fgMask, frameNumberString.c_str(), cv::Point(15, 15),
+    putText(fgMask, frameNumberString.c_str(), Point(15, 15),
             FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
     bitwise_and(input, input, output, fgMask);
@@ -41,6 +43,10 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
     findContours(img, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     Mat output= Mat::zeros(img.rows,img.cols, CV_8UC3);
 
+    // Whene grayscale, convert to BGR >> colorized contours
+    if (img.type() == 0) {
+        cvtColor(img, img, COLOR_GRAY2BGR);
+    }
     RNG rng(0xFFFFFFFF);
     for(auto i=0; i<contours.size(); i++){
         double Area = cv::contourArea(contours[i]);
@@ -48,9 +54,9 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
             continue;
         }
 
-//        cv::Rect bb = cv::boundingRect(contours[i]);
-//        cv::rectangle(img, bb, randomColor(rng));
-        cv::drawContours(img, contours, i, randomColor(rng), 5);
+        cv::Rect bb = cv::boundingRect(contours[i]);
+        cv::rectangle(img, bb, randomColor(rng));
+//        cv::drawContours(img, contours, i, randomColor(rng), 2);
 
 
     }
@@ -61,13 +67,13 @@ Mat FrameProcessing::findContoursMat(Mat img, int area)
 Mat FrameProcessing::autoCanny(Mat input, int lower, int upper, int kernel_s) {
 
     Mat grayscale, gaussBlure, edges;
-    cvtColor(input, grayscale, cv::COLOR_BGR2GRAY);
-    GaussianBlur(grayscale, gaussBlure, Size(15, 15), cv::BORDER_REPLICATE);
+    cvtColor(input, grayscale, COLOR_BGR2GRAY);
+    GaussianBlur(grayscale, gaussBlure, Size(15, 15), BORDER_REPLICATE);
 
     Canny(gaussBlure, edges, lower, upper, 3);
     Mat output = dilatation(edges, 0, kernel_s);
-//    Mat contours = findContoursMat(output, 100);
-    return output;
+    Mat contours = findContoursMat(output, 100);
+    return contours;
 }
 
 Mat FrameProcessing::dilatation(Mat input, int type, int size) {

@@ -1,12 +1,12 @@
 #ifndef STATICUTILS_H
 #define STATICUTILS_H
-// #include <string> // in frameprocessing.h
+
+#include <iostream>
 
 #include <opencv4/opencv2/highgui/highgui.hpp>
-// #include <opencv4/opencv2/imgproc/imgproc.hpp> // in frameprocessing.h
 #include <opencv4/opencv2/core/utility.hpp>
 
-// #include "frameprocessing.h"
+
 
 using namespace std;
 using namespace cv;
@@ -18,7 +18,7 @@ const int max_value = 255;
 static int low_H = 0, low_S = 0, low_V = 0;
 static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
-const String EDGE_SLIDER = "Edge Slider";
+const String EDGE_SLIDER = "Edge";
 const int upper_threshold = 100;
 static int lower = 0;
 static int upper = upper_threshold;
@@ -82,7 +82,7 @@ static void on_low_edge_thresh_trackbar(int, void *)
 
 static void on_heigh_edge_thresh_trackbar(int, void *)
 {
-    upper = max(upper, lower+1);;
+    upper = max(upper, lower+1);
     setTrackbarPos("upper threshold", EDGE_SLIDER, upper);
 }
 
@@ -119,18 +119,6 @@ static void backgroundRemove_kernel_size_trackbar(int, void *)
     min_kernel = min(min_kernel, kernel_size);
     setTrackbarPos("Blure threshold", BACKGROUNDREMOVE_SLIDER, min_kernel);
 }
-
-//
-static void mouseCallBack(int event, int x, int y, int flags, void*){
-
-//    if (event == cv::EVENT_LBUTTONDOWN) {
-//        SelectRoi.x = y;
-//        SelectRoi.y = x;
-//        //        std::cout << "x-coord: " << x << " " << "y-coord: " << y << std::endl;
-
-//    }
-}
-
 
 static Scalar randomColor( RNG& rng )
 {
