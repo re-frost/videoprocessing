@@ -10,7 +10,6 @@
 
 #include "colortracking.hpp"
 
-#include "objecttracking.hpp"
 using namespace cv;
 using namespace std;
 

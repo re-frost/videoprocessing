@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <string>
 
-#include "objecttracking.hpp"
 #include "videoprocessing.hpp"
 
 int main(int argc, char *argv[])

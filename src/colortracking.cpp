@@ -92,7 +92,9 @@ Mat ColorTracking::colorTracking(Mat input) {
         }
 
         // Draw the ellipse on top of the image
-        ellipse(image, rotatedTrackingRect, Scalar(0,255,0), 3, LINE_AA);
+//        ellipse(image, rotatedTrackingRect, Scalar(0,255,0), 3, LINE_AA);
+        // Draw rect
+        rectangle(image, trackingRect, Scalar(255, 0, 0), 1, LINE_8, 0.5);
     }
 
     // Apply the 'negative' effect on the selected region of interest
