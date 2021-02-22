@@ -26,7 +26,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
 
     bool pausePressed = false;
     while(true) {
-        int wk = cv::waitKey(150);
+        int wk = cv::waitKey(200);
         if((char)wk == 'p'){
             pausePressed = !pausePressed;
         }else if(!((char)wk == 'p') && !pausePressed){
