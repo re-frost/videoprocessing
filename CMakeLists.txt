@@ -15,6 +15,7 @@ add_executable(videoprocessing
     src/show.cpp
     src/frameprocessing.cpp
     include/staticUtils.hpp
-    src/colortracking.cpp)
+    src/colortracking.cpp
+    src/opencvslider.cpp)
 
 target_link_libraries( videoprocessing ${OpenCV_LIBS} )

@@ -10,29 +10,25 @@
 #include <opencv4/opencv2/video/tracking.hpp>
 #include <opencv4/opencv2/video/video.hpp>
 
+#include "opencvslider.hpp"
+
 using namespace cv;
 using namespace std;
 
 
-class ColorTracking
-{
+class ColorTracking : public OpencvSlider {
+
 public:
     ColorTracking(String);
 
 
-    inline static bool selectRegion = false;
-    inline static Rect selectedRect;
-    inline static Point originPoint;
-    inline static int trackingFlag = 0;
-    inline static Mat image;
-    static void onMouse(int, int, int, int, void*);
+
     Mat colorTracking(Mat);
 
 
     ~ColorTracking();
 
 private:
-    String windowName;
     Mat hsvImage, hueImage, mask, hist, backproj, res;
     Rect trackingRect;
     int histSize = 256;
@@ -55,6 +51,9 @@ private:
     double ticks = 0;
     bool found = false;
     int notFoundCount = 0;
+
+    // Debugger
+    Mat frame_threshold;
 
 };
 

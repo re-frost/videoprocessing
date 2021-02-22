@@ -22,11 +22,13 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
         Show::backgroundRemoveSlider();
     }else if (modus == "HSV Slider") {
         Show::hsvSlider();
+    }else if (modus == "Color Tracking"){
+        colortrack.showSlider();
     }
 
     bool pausePressed = false;
     while(true) {
-        int wk = cv::waitKey(200);
+        int wk = cv::waitKey(250);
         if((char)wk == 'p'){
             pausePressed = !pausePressed;
         }else if(!((char)wk == 'p') && !pausePressed){

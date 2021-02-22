@@ -1,6 +1,6 @@
 #include "colortracking.hpp"
 
-ColorTracking::ColorTracking( String winName) : windowName(winName)
+ColorTracking::ColorTracking(String winName) : OpencvSlider(winName)
 {
 
     state = Mat(stateSize, 1, type);  // [x, y, v_x, v_y, w, h]
@@ -42,50 +42,18 @@ ColorTracking::ColorTracking( String winName) : windowName(winName)
     kf.processNoiseCov.at<float>(7) = 1e-2;
     kf.processNoiseCov.at<float>(14) = 10.0f;
     kf.processNoiseCov.at<float>(21) = 10.0f;
-    kf.processNoiseCov.at<float>(28) = 1e-2;
-    kf.processNoiseCov.at<float>(35) = 1e-2;
+    kf.processNoiseCov.at<float>(28) = 1e-1;
+    kf.processNoiseCov.at<float>(35) = 1e-1;
 
     // Measures Noise Covariance Matrix R
     setIdentity(kf.measurementNoiseCov, Scalar(1e-1));
 
     // Camera Index
     int idx = 0;
+
+    namedWindow("Debugger", WINDOW_AUTOSIZE);
 }
 
-void ColorTracking::onMouse(int event, int x, int y, int, void*)
-{
-    if(selectRegion)
-    {
-        selectedRect.x = MIN(x, originPoint.x);
-        selectedRect.y = MIN(y, originPoint.y);
-        selectedRect.width = std::abs(x - originPoint.x);
-        selectedRect.height = std::abs(y - originPoint.y);
-
-        selectedRect &= Rect(0, 0, image.cols, image.rows);
-    }
-
-    switch(event)
-    {
-    case EVENT_LBUTTONDOWN:
-        originPoint = Point(x,y);
-        selectedRect = Rect(x,y,0,0);
-        selectRegion = true;
-        break;
-
-    case EVENT_LBUTTONUP:
-        selectRegion = false;
-        if( selectedRect.width > 0 && selectedRect.height > 0 )
-        {
-            trackingFlag = -1;
-        }
-        break;
-    }
-
-    cout << "originPoint coord " << originPoint.x << " " << originPoint.y << endl;
-    cout << "x, y " << x << " " << y << endl;
-    cout << "selectedRect coord " << selectedRect.x << " " << selectedRect.y << endl;
-    cout << "selectedRect dimension " << selectedRect.width << " " << selectedRect.height << endl;
-}
 
 Mat ColorTracking::colorTracking(Mat input) {
 
@@ -114,7 +82,15 @@ Mat ColorTracking::colorTracking(Mat input) {
     {
         // Check for all the values in 'hsvimage' that are within the specified range
         // and put the result in 'mask'
-        inRange(hsvImage, Scalar(0, minSaturation, minValue), Scalar(180, 256, maxValue), mask);
+        inRange(hsvImage, Scalar(low_hue, low_saturation, low_value), Scalar(high_hue, high_saturation, high_value), mask);
+
+        // Debugger
+        cout << low_hue << " " << high_hue << " " << test << endl;
+        cout << low_saturation << " " << high_saturation << " " << test << endl;
+        cout << low_value << " " << high_value << " " << test << endl;
+        bitwise_and(input, input, frame_threshold, mask);
+        imshow("Debugger", mask);
+
 
         // Mix the specified channels
         int channels[] = {0, 0};
@@ -147,7 +123,7 @@ Mat ColorTracking::colorTracking(Mat input) {
 
             state = kf.predict();
             cout << "State post:" << endl << state << endl;
-
+            cout << "Tracking rect " << endl << trackingRect << endl;
             cv::Rect predRect;
             predRect.width = state.at<float>(4);
             predRect.height = state.at<float>(5);
@@ -188,14 +164,13 @@ Mat ColorTracking::colorTracking(Mat input) {
         meas.at<float>(2) = (float)trackingRect.width;
         meas.at<float>(3) = (float)trackingRect.height;
 
-        cout << kf.errorCovPre.size << endl;
         if (!found) { // First detection!
 
             // >>>> Initialization
             kf.errorCovPre.at<float>(0) = 1; // px
             kf.errorCovPre.at<float>(7) = 1; // px
-            kf.errorCovPre.at<float>(14) = 1;
-            kf.errorCovPre.at<float>(21) = 1;
+            kf.errorCovPre.at<float>(14) = 0.3;
+            kf.errorCovPre.at<float>(21) = 0.3;
             kf.errorCovPre.at<float>(28) = 1; // px
             kf.errorCovPre.at<float>(35) = 1; // px
 
@@ -213,7 +188,7 @@ Mat ColorTracking::colorTracking(Mat input) {
         }else
             kf.correct(meas); // Kalman Correction
 
-        cout << "Measure matrix:" << endl << meas << endl;
+//        cout << "Measure matrix:" << endl << meas << endl;
     }
 
     // Apply the 'negative' effect on the selected region of interest
@@ -225,6 +200,9 @@ Mat ColorTracking::colorTracking(Mat input) {
 
     return image;
 }
+
+
+
 
 ColorTracking::~ColorTracking(){}
 
