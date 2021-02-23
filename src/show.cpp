@@ -23,7 +23,7 @@ void Show::basicStream(VideoCapture &capture, String winName, string modus) {
     }else if (modus == "HSV Slider") {
         Show::hsvSlider();
     }else if (modus == "Color Tracking"){
-        colortrack.showSlider();
+//        colortrack.showSlider();
     }
 
     bool pausePressed = false;

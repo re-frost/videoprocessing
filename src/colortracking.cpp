@@ -48,8 +48,6 @@ ColorTracking::ColorTracking(String winName) : OpencvSlider(winName)
     // Measures Noise Covariance Matrix R
     setIdentity(kf.measurementNoiseCov, Scalar(1e-1));
 
-    // Camera Index
-    int idx = 0;
 
     namedWindow("Debugger", WINDOW_AUTOSIZE);
 }
@@ -59,21 +57,24 @@ Mat ColorTracking::colorTracking(Mat input) {
 
     setMouseCallback(windowName, onMouse, 0);
 
-    float hueRanges[] = {0,180};
-    const float* histRanges = hueRanges;
+    // Define Ranges of channels
+    float hueRanges[] = {0, 179};
+    float saturationRanges[] = {0, 255};
+    float valueRanges[] = {0, 255};
 
-    //    resize(input, input, Size(), scalingFactor, scalingFactor, INTER_AREA);
+    const float* histHueRanges = hueRanges;
+    const float* histSaturationRanges = saturationRanges;
+    const float* histValueRanges = valueRanges;
 
     GaussianBlur(input, gaussianBlur, Size(5, 5), BORDER_REPLICATE);
 
-    // Clone the input frame
+    // Copy the image
     gaussianBlur.copyTo(image);
-
 
     // Convert to HSV colorspace
     cvtColor(image, hsvImage, COLOR_BGR2HSV);
 
-    // Delta t
+    // Delta t -- Kalman filter
     double precTick = ticks;
     ticks = (double) getTickCount();
     double dT = (ticks - precTick) / getTickFrequency(); //seconds
@@ -82,35 +83,34 @@ Mat ColorTracking::colorTracking(Mat input) {
     {
         // Check for all the values in 'hsvimage' that are within the specified range
         // and put the result in 'mask'
-        inRange(hsvImage, Scalar(low_hue, low_saturation, low_value), Scalar(high_hue, high_saturation, high_value), mask);
+        inRange(hsvImage, Scalar(lowHUE, minSaturation, minValue), Scalar(highHUE, maxSaturation, maxValue), mask);
 
         // Debugger
-        cout << low_hue << " " << high_hue << " " << test << endl;
-        cout << low_saturation << " " << high_saturation << " " << test << endl;
-        cout << low_value << " " << high_value << " " << test << endl;
+        cout << "Hue" << lowHUE << " " << highHUE << " " << test << endl;
+        cout << "Saturation " << minSaturation << " " << maxSaturation << " " << test << endl;
+        cout << "Value " << minValue << " " << maxValue << " " << test << endl;
+
         bitwise_and(input, input, frame_threshold, mask);
-        imshow("Debugger", mask);
-
-
-        // Mix the specified channels
-        int channels[] = {0, 0};
-        hueImage.create(hsvImage.size(), hsvImage.depth());
-        mixChannels(&hsvImage, 1, &hueImage, 1, channels, 1);
-
+        imshow("Debugger", frame_threshold);
 
 
         if(trackingFlag < 0)
         {
-            // Create images based on selected regions of interest
-            Mat roi(hueImage, selectedRect), maskroi(mask, selectedRect);
+            // When choose new region, reset all channels
+            lowHUE = 0, highHUE = 179;
+            minSaturation = 0, maxSaturation = 255;
+            minValue = 0, maxValue = 255;
+            // check in Range
+            inRange(hsvImage, Scalar(lowHUE, minSaturation, minValue), Scalar(highHUE, maxSaturation, maxValue), mask);
 
-            // Compute the histogram and normalize it
-            calcHist(&roi, 1, 0, maskroi, hist, 1, &histSize, &histRanges);
-            normalize(hist, hist, 0, 255, NORM_MINMAX);
+            // Splt HSV Channels for histogram
+            ColorTracking::prepareChannels();
+
+            // Calculate Histogram & set boundries for mask
+            ColorTracking::defineColorRange(histHueRanges, histSaturationRanges, histValueRanges);
 
             trackingRect = selectedRect;
             trackingFlag = 1;
-
         }
 
         if (found) {
@@ -140,7 +140,7 @@ Mat ColorTracking::colorTracking(Mat input) {
 
 
         // Compute the histogram back projection
-        calcBackProject(&hueImage, 1, 0, hist, backproj, &histRanges);
+        calcBackProject(&hueImage, 1, 0, histHue, backproj, &histHueRanges);
         backproj &= mask;
         RotatedRect rotatedTrackingRect = CamShift(backproj, trackingRect, TermCriteria(TermCriteria::EPS | TermCriteria::COUNT, 10, 1));
 
@@ -188,7 +188,7 @@ Mat ColorTracking::colorTracking(Mat input) {
         }else
             kf.correct(meas); // Kalman Correction
 
-//        cout << "Measure matrix:" << endl << meas << endl;
+        //        cout << "Measure matrix:" << endl << meas << endl;
     }
 
     // Apply the 'negative' effect on the selected region of interest
@@ -201,7 +201,53 @@ Mat ColorTracking::colorTracking(Mat input) {
     return image;
 }
 
+void ColorTracking::defineColorRange(const float* histHueRanges,
+                                     const float* histSaturationRanges,
+                                     const float* histValueRanges) {
 
+    // Create images based on selected regions of interest
+    Mat roiHue(hueImage, selectedRect), roiSaturation(saturationImage, selectedRect);
+    Mat roiVaue(valueImage, selectedRect), maskroi(mask, selectedRect);
+
+    // Compute the histogram and normalize it
+    calcHist(&roiHue, 1, 0, maskroi, histHue, 1, &histHueSize, &histHueRanges);
+    calcHist(&roiSaturation, 1, 0, maskroi, histSaturation, 1, &histSaturationSize, &histSaturationRanges);
+    calcHist(&roiVaue, 1, 0, maskroi, histvalue, 1, &histValueSize, &histValueRanges);
+
+    double minH = 0, maxH = 179, minSV = 0, maxSV = 255;
+    Point minLoc, maxLoc;
+    minMaxLoc(histHue, &minH, &maxH, &minLoc, &maxLoc);
+    lowHUE = (int)maxLoc.y - 3;
+    highHUE = (int)maxLoc.y + 3;
+
+    minMaxLoc(histSaturation, &minSV, &maxSV, &minLoc, &maxLoc);
+    minSaturation = (int)maxLoc.y - 30;
+    maxSaturation = (int)maxLoc.y + 30;
+
+    minMaxLoc(histvalue, &minSV, &maxSV, &minLoc, &maxLoc);
+    minValue = (int)maxLoc.y - 30;
+    maxValue = (int)maxLoc.y + 30;
+
+    normalize(histHue, histHue, 0, 180, NORM_MINMAX);
+    normalize(histSaturation, histSaturation, 0, 255, NORM_MINMAX);
+    normalize(histvalue, histvalue, 0, 255, NORM_MINMAX);
+}
+
+void ColorTracking::prepareChannels() {
+    // Mix the specified channels
+    // https://titanwolf.org/Network/Articles/Article?AID=ba3d9546-918b-4a52-920f-a6af746a1058#gsc.tab=0
+    int channelsHue[] = {0, 0};
+    int channelsSaturation[] = {1, 0};
+    int channelsValue[] = {2, 0};
+
+    hueImage.create(hsvImage.size(), hsvImage.depth());
+    saturationImage.create(hsvImage.size(), hsvImage.depth());
+    valueImage.create(hsvImage.size(), hsvImage.depth());
+
+    mixChannels(&hsvImage, 1, &hueImage, 1, channelsHue, 1);
+    mixChannels(&hsvImage, 1, &saturationImage, 1, channelsSaturation, 1);
+    mixChannels(&hsvImage, 1, &valueImage, 1, channelsValue, 1);
+}
 
 
 ColorTracking::~ColorTracking(){}
