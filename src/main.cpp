@@ -1,28 +1,139 @@
 ﻿#include <iostream>
 #include <string>
 
+#include <opencv4/opencv2/xfeatures2d.hpp>
+#include <opencv4/opencv2/calib3d.hpp>
+#include <opencv4/opencv2/stereo.hpp>
+#include <opencv4/opencv2/ximgproc/disparity_filter.hpp>
+
 #include "videoprocessing.hpp"
+#include "depthimage.hpp"
+
 
 int main(int argc, char *argv[])
 {
     std::string filepath;
-    if (argc > 2)
+    if (argc > 1)
         filepath = argv[1];
     else
         filepath = "";
 
     VideoProcessing Workshop(filepath);
 
-//    Workshop.showBasicStream("unchangned", "unchangned");
-//    Workshop.showBasicStream(HSV_SLIDER, "HSV Slider");
-//    Workshop.showBasicStream(EDGE_SLIDER, "Edge");
-//    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
-//    Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
-    Workshop.showBasicStream("Color Tracking", "Color Tracking");
+    //    Workshop.showBasicStream("unchangned", "unchangned");
+    //    Workshop.showBasicStream(HSV_SLIDER, "HSV Slider");
+    //    Workshop.showBasicStream(EDGE_SLIDER, "Edge");
+    //    Workshop.showBasicStream(BACKGROUNDREMOVE_SLIDER, BACKGROUNDREMOVE_SLIDER);
+    //    Workshop.showBasicStream("Background Subtraction", "Background Subtraction");
+    //    Workshop.showBasicStream("Color Tracking", "Color Tracking");
+
+    string sterepImagedir = "/home/felix/Documents/stereo-pairs";
+    string subfolder[] = {"/cones", "/teddy", "/tsukuba", "/venus"};
+    DepthImage depthimage;
+    string leftImage = "/imL.png", rightImage = "/imR.png";
+
+    Mat leftImg, rightImg, disparity;
+    leftImg = cv::imread(sterepImagedir + subfolder[1] + leftImage, IMREAD_COLOR);
+    rightImg = cv::imread(sterepImagedir + subfolder[1] + rightImage, IMREAD_COLOR);
+
+    cvtColor(leftImg, leftImg, COLOR_BGR2GRAY);
+    cvtColor(rightImg, rightImg, COLOR_BGR2GRAY);
+
+    namedWindow("left", WINDOW_AUTOSIZE);
+    namedWindow("right", WINDOW_AUTOSIZE);
+    imshow("left", leftImg);
+    imshow("right", rightImg);
+    waitKey(0);
+
+    //    float scalingFactor = 0.5;
+    //    resize(leftImg, leftImg, Size(), scalingFactor, scalingFactor, INTER_AREA);
+    //    resize(rightImg, rightImg, Size(), scalingFactor, scalingFactor, INTER_AREA);
+
+//    std::vector<cv::KeyPoint> keypoints1, keypoints2;
+//    cv::Ptr<cv::Feature2D> ptrFeature2D = SiftFeatureDetector::create(5000);
+
+//    // Keypoint detection
+//    ptrFeature2D->detect(leftImg, keypoints1);
+//    ptrFeature2D->detect(rightImg, keypoints2);
 
 
-//    ObjectTracking objectdetection(filepath);
-  
+//    // Extract the descriptor
+//    cv::Mat descriptors1;
+//    cv::Mat descriptors2;
+
+//    ptrFeature2D->compute(leftImg,keypoints1,descriptors1);
+//    ptrFeature2D->compute(rightImg,keypoints2,descriptors2);
+
+//    cv::BFMatcher matcher(cv::NORM_L2);
+
+//    // Match the two image descriptors
+//    std::vector<cv::DMatch> outputMatches;
+//    matcher.match(descriptors1,descriptors2, outputMatches);
+
+//    // Convert keypoints into Point2f
+//    std::vector<cv::Point2f> points1, points2;
+//    for (std::vector<cv::DMatch>::const_iterator it= outputMatches.begin(); it!= outputMatches.end(); ++it) {
+
+//        // Get the position of left keypoints
+//        points1.push_back(keypoints1[it->queryIdx].pt);
+//        // Get the position of right keypoints
+//        points2.push_back(keypoints2[it->trainIdx].pt);
+//    }
+
+
+
+//    std::vector<uchar> inliers(points1.size(),0);
+//    cv::Mat fundamental= cv::findFundamentalMat(
+//                points1,points2, // matching points
+//                inliers,         // match status (inlier or outlier)
+//                cv::FM_RANSAC,   // RANSAC method
+//                1.0,        // distance to epipolar line
+//                0.98);     // confidence probability
+
+
+//    cout << fundamental << endl;
+
+
+//    // Compute homographic rectification
+//    cv::Mat h1, h2;
+//    cv::stereoRectifyUncalibrated(points1, points2,
+//                                  fundamental,
+//                                  leftImg.size(), h1, h2);
+//    // Rectify the images through warping
+//    cv::Mat rectified1;
+//    cv::warpPerspective(leftImg, rectified1, h1, leftImg.size());
+//    cv::Mat rectified2;
+//    cv::warpPerspective(rightImg, rectified2, h2, rightImg.size());
+
+    int mindisp = 0;
+    int numDisp = 128;
+    int blocksize = 9;
+
+    cv::Ptr<stereo::StereoBinarySGBM> stereoBinSGB = stereo::StereoBinarySGBM::create(mindisp, numDisp, blocksize);
+
+    stereoBinSGB->setP1(100);
+    stereoBinSGB->setP2(1000);
+    stereoBinSGB->setMinDisparity(0);
+    stereoBinSGB->setUniquenessRatio(5);
+    stereoBinSGB->setSpeckleWindowSize(400);
+    stereoBinSGB->setSpeckleRange(0);
+    stereoBinSGB->setDisp12MaxDiff(1);
+    stereoBinSGB->setBinaryKernelType(stereo::CV_MODIFIED_CENSUS_TRANSFORM);
+    stereoBinSGB->setSpekleRemovalTechnique(stereo::CV_SPECKLE_REMOVAL_AVG_ALGORITHM);
+    stereoBinSGB->setSubPixelInterpolationMethod(stereo::CV_SIMETRICV_INTERPOLATION);
+
+    stereoBinSGB->compute(leftImg, rightImg, disparity);
+
+    // Natürlich darft du es nicht convertieren
+    Mat result;
+    disparity.convertTo(result, CV_8UC1);
+
+    namedWindow("Disparity", WINDOW_AUTOSIZE);
+    imshow("Disparity", result);
+    waitKey(0);
+
+    cv::imwrite("/home/felix/disparity.jpg", disparity);
+
     std::cout << "Program finished normally" << std::endl;
     return 0;
 }

@@ -5,12 +5,13 @@
 #include <sstream>
 #include <string>
 
+#include <opencv4/opencv2/highgui.hpp>
+
 #include "frameprocessing.hpp"
 #include "staticUtils.hpp"
 
 #include "colortracking.hpp"
 
-#include <opencv4/opencv2/highgui.hpp>
 using namespace cv;
 using namespace std;
 
